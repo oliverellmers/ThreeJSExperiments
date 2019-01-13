@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
 			body {
-				background:#000;
+				background:#FFFFFF;
 				color:#fff;
 				padding:0;
 				margin:0;
@@ -86,7 +86,7 @@
 				var textureCube = new THREE.CubeTextureLoader().load( urls );
 				textureCube.mapping = THREE.CubeRefractionMapping;
 				scene = new THREE.Scene();
-				scene.background = textureCube;
+				//scene.background = textureCube;
 
 				// LIGHTS
 				var ambient = new THREE.AmbientLight( 0xffffff );
@@ -94,19 +94,27 @@
 				pointLight = new THREE.PointLight( 0xffffff, 2 );
 				scene.add( pointLight );
 
-
-
-				// material samples
-				var cubeMaterial1 = new THREE.MeshPhongMaterial( { color: 0xb2cbdf, envMap: textureCube, refractionRatio: 0.98 } );
-				var wireFrameMat = new THREE.MeshBasicMaterial();
-  				wireFrameMat.wireframe = true;
-  				wireFrameMat.visible = false;
+			
 				
 
-				renderer = new THREE.WebGLRenderer();
+				renderer = new THREE.WebGLRenderer({ alpha: true });
+				renderer.setClearColor( 0x000000, 0 );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
+
+				var localPlane = new THREE.Plane( new THREE.Vector3( 0, 0, -1 ), 0 );
+				var globalPlane = new THREE.Plane( new THREE.Vector3( 0, 0, -1 ), 0 );
+				renderer.clippingPlanes = [ globalPlane ];
+				renderer.localClippingEnabled = true;
+
+				// material samples
+				var cubeMaterial1 = new THREE.MeshPhongMaterial( { color: 0xb2cbdf, envMap: textureCube, refractionRatio: 0.98, depthWrite: true, depthTest: true, clippingPlanes: [ localPlane ],
+    				clipShadows: true} );
+				var wireFrameMat = new THREE.MeshBasicMaterial();
+  				wireFrameMat.wireframe = true;
+  				wireFrameMat.visible = false;
+
 
 				//Custom Quad 
 				var a = { x:10,
@@ -128,17 +136,15 @@
 				quadGeometry.computeVertexNormals();
 
 
-				var material = new THREE.MeshBasicMaterial({ color: "0xff1100"});
-				material.side = THREE.DoubleSide;
+
+
+
+
+				var material = new THREE.MeshBasicMaterial({ side:THREE.BackSide, depthWrite: false, depthTest: true});
+				//material.side = THREE.DoubleSide;
 				var mesh = new THREE.Mesh( quadGeometry, material );
-
 				mesh.position.set(0,0,0);
-				scene.add(mesh);
-
-				mouseGeo = new THREE.SphereGeometry(0.01, 20, 20);
-
-
-
+				//scene.add(mesh);
 
 
 				date = new Date();
