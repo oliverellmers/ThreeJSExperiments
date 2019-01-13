@@ -64,6 +64,8 @@
 			var orbitRadius = 2; // for example
 
 			var quadGeometry;
+			var mousePos;
+			var mouseGeo;
 
 
 			init();
@@ -133,6 +135,8 @@
 				mesh.position.set(0,0,0);
 				scene.add(mesh);
 
+				mouseGeo = new THREE.SphereGeometry(0.01, 20, 20);
+
 
 
 
@@ -178,6 +182,7 @@
 			function onDocumentMouseMove( event ) {
 				mouseX = ( event.clientX - windowHalfX ) * 4;
 				mouseY = ( event.clientY - windowHalfY ) * 4;
+				mousePos = new THREE.Vector3( mouseX, mouseY, -1 ).unproject( camera );
 			}
 			//
 			function animate() {
@@ -199,12 +204,17 @@
 				camera.lookAt( scene.position );
 				pointLight.position.x = 1500 * Math.cos( timer );
 				pointLight.position.z = 1500 * Math.sin( timer );
+
 				sphere.position.set(
 					Math.cos(timer) * orbitRadius,
 					0,
 					Math.sin(timer) * orbitRadius
 
 				);
+
+				
+				//mouseGeo.position.set(mousePos.x, mousePos.y, mousePos.z);
+
 				renderer.render( scene, camera );
 			}
 		</script>
