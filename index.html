@@ -60,7 +60,7 @@
 			var sphere;
 			var date;
 
-			var orbitRadius = 2; // for example
+			var orbitRadius = 5; // for example
 
 			var quadGeometry;
 			var mousePos;
@@ -92,9 +92,6 @@
 				scene.add( ambient );
 				pointLight = new THREE.PointLight( 0xffffff, 2 );
 				scene.add( pointLight );
-
-			
-				
 
 				renderer = new THREE.WebGLRenderer({ alpha: true });
 				renderer.setClearColor( 0x000000, 0 );
@@ -135,10 +132,6 @@
 				quadGeometry.computeVertexNormals();
 
 
-
-
-
-
 				var material = new THREE.MeshBasicMaterial({ side:THREE.BackSide, depthWrite: false, depthTest: true});
 				//material.side = THREE.DoubleSide;
 				var mesh = new THREE.Mesh( quadGeometry, material );
@@ -147,7 +140,7 @@
 
 
 				date = new Date();
-				sphereGeom = new THREE.SphereGeometry(0.5, 50, 50);
+				sphereGeom = new THREE.SphereGeometry(2.0, 50, 50);
 				// save points for later calculation
 				 for (var i = 0; i < sphereGeom.vertices.length; i += 1) {
 				    var vertex = sphereGeom.vertices[i];
@@ -201,7 +194,7 @@
 
 				
 
-				var timer = - 0.002 * Date.now();
+				var timer = - 0.001 * Date.now();
 				/*
 				camera.position.x += ( mouseX - camera.position.x ) * .05;+44
 				camera.position.y += ( - mouseY - camera.position.y ) * .05;
