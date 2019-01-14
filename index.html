@@ -41,6 +41,7 @@
 		<script src="js/WebGL.js"></script>
 		<script src="js/libs/stats.min.js"></script>
 		<script src="js/utils/SceneUtils.js"></script>
+		<script src="js/perlin.js"></script>
 
 		<script>
 			if ( WEBGL.isWebGLAvailable() === false ) {
@@ -62,10 +63,8 @@
 			var date;
 
 			var orbitRadius = 5; // for example
-
-			var quadGeometry;
-			var mousePos;
-			var mouseGeo;
+			//var quadGeometry;
+			var pn;
 
 
 			init();
@@ -113,7 +112,8 @@
   				wireFrameMat.visible = false;
 
 
-				//Custom Quad 
+				//Custom Quad
+				/*
 				var a = { x:10,
          				  y:10 }
 				var b = { x:50,
@@ -133,15 +133,18 @@
 				quadGeometry.computeVertexNormals();
 
 
+
 				var material = new THREE.MeshBasicMaterial({ side:THREE.BackSide, depthWrite: false, depthTest: true});
 				//material.side = THREE.DoubleSide;
 				var mesh = new THREE.Mesh( quadGeometry, material );
 				mesh.position.set(0,0,0);
+				*/
 				//scene.add(mesh);
 
 
 				date = new Date();
-				sphereGeom = new THREE.SphereGeometry(2.0, 50, 50);
+				pn = new Perlin('rnd' + date.getTime());
+				sphereGeom = new THREE.SphereGeometry(0.001, 50, 50);
 				// save points for later calculation
 				 for (var i = 0; i < sphereGeom.vertices.length; i += 1) {
 				    var vertex = sphereGeom.vertices[i];
@@ -154,7 +157,6 @@
 				 }
 
 				sphere = THREE.SceneUtils.createMultiMaterialObject(sphereGeom, [cubeMaterial1, wireFrameMat]);
-				//sphere.position.x = 1;
   				scene.add(sphere);
   			
 
@@ -191,6 +193,26 @@
 			}
 			function render() {
 				step += 1;
+
+				//sphere noise
+				scene.remove(sphere);
+
+			    for (var i = 0; i < sphereGeom.vertices.length; i += 1) {
+			      var vertex = sphereGeom.vertices[i];
+
+			      // sphereVerticesArray.push(vec);
+			      var value = pn.noise((vertex.x + step)/ 200, vertex.y / 200, vertex.z / 200);
+			      // value = Math.abs(1 - value);
+			      vertex.x = sphereVerticesArray[i].x + sphereVerticesNormArray[i].x * value * 2;
+			      vertex.y = sphereVerticesArray[i].y + sphereVerticesNormArray[i].y * value * 2;
+			      vertex.z = sphereVerticesArray[i].z + sphereVerticesNormArray[i].z * value * 2;
+			    }
+			    sphereGeom.computeFaceNormals();
+			    sphereGeom.computeVertexNormals();
+
+			    sphereGeom.verticesNeedUpdate = true;
+			    scene.add(sphere);
+				//-----
 
 
 				
