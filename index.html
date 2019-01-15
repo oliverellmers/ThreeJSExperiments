@@ -66,6 +66,12 @@
 			//var quadGeometry;
 			var pn;
 
+			var boxGeometry1;
+  			var box1;
+
+  			var cilinderGeometry1;
+  			var cilinder1;
+
 
 			init();
 			animate();
@@ -112,36 +118,6 @@
   				wireFrameMat.visible = false;
 
 
-				//Custom Quad
-				/*
-				var a = { x:10,
-         				  y:10 }
-				var b = { x:50,
-				          y:50 }
-
-				quadGeometry = new THREE.Geometry();
-
-				quadGeometry.vertices.push( new THREE.Vector3( -10, 10, 0 ) );
-				quadGeometry.vertices.push( new THREE.Vector3( -10, -10, 0 ) );
-				quadGeometry.vertices.push( new THREE.Vector3( 10, -10, 0 ) );
-				quadGeometry.vertices.push( new THREE.Vector3( 10, 10, 0 ) );
-
-				quadGeometry.faces.push( new THREE.Face3( 0, 1, 2 ) );
-				quadGeometry.faces.push( new THREE.Face3( 0, 2, 3 ) );
-
-				quadGeometry.computeFaceNormals();
-				quadGeometry.computeVertexNormals();
-
-
-
-				var material = new THREE.MeshBasicMaterial({ side:THREE.BackSide, depthWrite: false, depthTest: true});
-				//material.side = THREE.DoubleSide;
-				var mesh = new THREE.Mesh( quadGeometry, material );
-				mesh.position.set(0,0,0);
-				*/
-				//scene.add(mesh);
-
-
 				date = new Date();
 				pn = new Perlin('rnd' + date.getTime());
 				sphereGeom = new THREE.SphereGeometry(0.001, 50, 50);
@@ -158,6 +134,18 @@
 
 				sphere = THREE.SceneUtils.createMultiMaterialObject(sphereGeom, [cubeMaterial1, wireFrameMat]);
   				scene.add(sphere);
+
+  				boxGeometry1 = new THREE.BoxGeometry( 4, 0.1, 2);
+  				box1 = new THREE.Mesh(boxGeometry1, cubeMaterial1);
+  				box1.position.set(3, 2, -2);
+  				scene.add(box1);
+
+  				/*
+  				cilinderGeometry1 = new THREE.CylinderGeometry( 1, 1, 10, 32 );
+  				var cilinderMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+  				cilinder1 = new THREE.Mesh( cilinderGeometry1, cilinderMaterial );
+				scene.add( cilinder1 );
+				*/
   			
 
 	
@@ -218,6 +206,9 @@
 				
 
 				var timer = - 0.001 * Date.now();
+
+				box1.rotation.y = timer;
+				box1.rotation.z = timer;
 				/*
 				camera.position.x += ( mouseX - camera.position.x ) * .05;+44
 				camera.position.y += ( - mouseY - camera.position.y ) * .05;
