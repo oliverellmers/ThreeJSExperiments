@@ -82,20 +82,15 @@
 				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 100000 );
 				camera.position.z = - 10;
 				//
-				//var r = "textures/cube/td/";
-				var r = "";
-				/*
+				var r = "textures/cube/td/";
+				
 				var urls = [
 					r + "px_final.jpg", r + "nx_final.jpg",
 					r + "py_final.jpg", r + "ny_final.jpg",
 					r + "pz_final.jpg", r + "nz_final.jpg"
 				];
-				*/
-				var urls = [
-					r + "https://github.com/oliverellmers/ThreeJSExperiments/blob/master/textures/cube/td/nx_final.jpg", r + "https://github.com/oliverellmers/ThreeJSExperiments/blob/master/textures/cube/td/nx_final.jpg",
-					r + "https://github.com/oliverellmers/ThreeJSExperiments/blob/master/textures/cube/td/nx_final.jpg", r + "https://animals.timduru.org/dirlist/monkey/PVWild12-Monkey-FaceCloseup.jpg/",
-					r + "https://animals.timduru.org/dirlist/monkey/PVWild12-Monkey-FaceCloseup.jpg/", r + "https://animals.timduru.org/dirlist/monkey/PVWild12-Monkey-FaceCloseup.jpg/"
-				];
+				
+				
 				var textureCube = new THREE.CubeTextureLoader().load( urls );
 				textureCube.mapping = THREE.CubeRefractionMapping;
 				scene = new THREE.Scene();
