@@ -236,7 +236,7 @@
 
   				boxGeometry1 = new THREE.BoxGeometry( 2, 0.05,1 );
   				box1 = new THREE.Mesh(boxGeometry1, cubeMaterial1);
-  				box1.position.set(3, 2, -2);
+  				box1.position.set(4.5, 2, -2);
   				scene.add(box1);
 
   				var mouseGeometry = new THREE.SphereGeometry(0.75, 20, 20);
@@ -372,7 +372,7 @@
 				if(gltfModel!=null){
 					gltfModel.rotation.y = -timer;
 					gltfModel.rotation.z = -timer;
-					gltfModel.position.set(-2,Math.cos(timer) * - 2,Math.sin(timer) * -3);
+					gltfModel.position.set(-3,Math.cos(timer) * -2.5,Math.sin(timer) * -3);
 				}
 				
 
@@ -382,12 +382,12 @@
 				sphere.rotation.y = timer * 0.5;
 				sphere.rotation.z = -timer * 0.5;
 				sphere.position.set(
-					Math.cos(timer * 0.5) * orbitRadius,
+					Math.cos(timer * 0.5) * orbitRadius * 1.5,
 					-0.25,
-					Math.sin(timer * 0.5) * orbitRadius
+					Math.sin(timer * 0.5) * orbitRadius * 1.5
 
 				);
-				sphere.scale.set(0.5,0.5,0.5);
+				sphere.scale.set(0.75,0.75,0.75);
 
 				renderer.render( scene, camera );
 			}
