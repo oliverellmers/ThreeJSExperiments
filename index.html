@@ -382,12 +382,12 @@
 				sphere.rotation.y = timer * 0.5;
 				sphere.rotation.z = -timer * 0.5;
 				sphere.position.set(
-					Math.cos(timer * 0.5) * orbitRadius * 1.5,
+					Math.cos(timer * 0.5) * orbitRadius,
 					-0.25,
-					Math.sin(timer * 0.5) * orbitRadius * 1.5
+					Math.sin(timer * 0.5) * orbitRadius
 
 				);
-				sphere.scale.set(0.75,0.75,0.75);
+				sphere.scale.set(0.65,0.65,0.65);
 
 				renderer.render( scene, camera );
 			}
