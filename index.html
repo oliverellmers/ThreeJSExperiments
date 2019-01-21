@@ -14,6 +14,7 @@
 			  cursor:none;
 			}
 
+			/*
 			.cursor {
   
 			  position: absolute;
@@ -38,6 +39,7 @@
 			  position:relative;
 			  height:100%;
 			}
+			*/
 
 			body {
 				background:#FFFFFF;
@@ -96,8 +98,9 @@
 		</script>
 		-->
 	
-
+		<!--
 		<div class="cursor" id="cursor1"></div>
+		-->
 		<script id="jsbin-javascript">
 			//canvas setup
 
@@ -131,6 +134,9 @@
 			var pn;
 			var boxGeometry1;
   			var box1;
+
+  			var mouse = {x: 0, y: 0};
+  			var mouseMesh;
 
 			init();
 			animate();
@@ -234,9 +240,14 @@
   				box1 = new THREE.Mesh(boxGeometry1, cubeMaterial1);
   				box1.position.set(3, 2, -2);
   				scene.add(box1);
+
+  				var mouseGeometry = new THREE.SphereGeometry(0.75, 20, 20);
+  				mouseMesh = new THREE.Mesh(mouseGeometry, cubeMaterial1);
+  				mouseMesh.position.set(3, 2, -2);
+  				scene.add(mouseMesh);
 	
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-				document.addEventListener( 'mousemove', moveCursor, false );
+				//document.addEventListener( 'mousemove', moveCursor, false );
 				window.addEventListener( 'resize', onWindowResize, false );
 				document.addEventListener('mouseenter', onDocumentMouseEnter, false);
 				document.addEventListener('mouseleave', onDocumentMouseLeave, false);
@@ -256,12 +267,24 @@
 				scene.add( sphere );
 				
 			}
+			
 			function onDocumentMouseMove( event ) {
 				mouseX = ( event.clientX - windowHalfX ) * 4;
 				mouseY = ( event.clientY - windowHalfY ) * 4;
 				mousePos = new THREE.Vector3( mouseX, mouseY, -1 ).unproject( camera );
+
+				event.preventDefault();
+				mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+				mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+				var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+				vector.unproject( camera );
+				var dir = vector.sub( camera.position ).normalize();
+				var distance = - camera.position.z / dir.z;
+				var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
+				mouseMesh.position.copy(pos);
 			}
 
+			/*
 			var $cursor = $('.cursor');
 			function moveCursor(e) {
 			  $cursor.addClass('is-moving');
@@ -273,16 +296,19 @@
 			       $cursor.removeClass('is-moving');
 			   }, 300);
 			}
+			*/
 
 			function onDocumentMouseEnter(event){
 				//console.log("the mouse has entered the iframe");
-				document.getElementById("cursor1").style.backgroundColor = "white";
+				//document.getElementById("cursor1").style.backgroundColor = "white";
+				scene.add(mouseMesh);
 
 			}
 
 			function onDocumentMouseLeave(event){
 				//console.log("the mouse has left the building");
-				document.getElementById("cursor1").style.backgroundColor = "transparent";
+				//document.getElementById("cursor1").style.backgroundColor = "transparent";
+				scene.remove(mouseMesh);
 
 			}
 			//
