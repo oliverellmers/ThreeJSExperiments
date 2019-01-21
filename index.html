@@ -77,7 +77,6 @@
 
 
 		<script src="js/three.js"></script>
-		<script src="js/loaders/PLYLoader.js"></script>
 		<script src="js/loaders/GLTFLoader.js"></script>
 		<script src="js/WebGL.js"></script>
 		<script src="js/libs/stats.min.js"></script>
@@ -87,16 +86,6 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 		
-		
-
-		<!--
-		<script type="text/javascript" language="javascript" src="js/jquery/jquery-3.3.1.min.js">
-		</script>
-		 <script type="text/javascript" language="javascript" src="js/html2canvas/html2canvas.min.js">
-		</script>
-		<script type="text/javascript" language="javascript" src="js/html2canvas/jquery.plugin.html2canvas.js">
-		</script>
-		-->
 	
 		<!--
 		<div class="cursor" id="cursor1"></div>
@@ -138,6 +127,8 @@
   			var mouse = {x: 0, y: 0};
   			var mouseMesh;
 
+  			var gltfModel;
+
 			init();
 			animate();
 
@@ -165,16 +156,17 @@
 				
 
 				scene = new THREE.Scene();
-				//scene.background = textureCube;
+				
 
 				// LIGHTS
 				var ambient = new THREE.AmbientLight( 0xffffff );
 				scene.add( ambient );
-				pointLight = new THREE.PointLight( 0xffffff, 2 );
+				pointLight = new THREE.PointLight( 0xffffff, 0.5);
 				scene.add( pointLight );
+				pointLight.position.set(5, 2, 10);
 
 				//RENDERER
-				renderer = new THREE.WebGLRenderer({ alpha: true, preserveDrawingBuffer: true });
+				renderer = new THREE.WebGLRenderer({ alpha: true, preserveDrawingBuffer: true, antialias: true });
 				renderer.setClearColor( 0x000000, 0 );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
@@ -202,6 +194,8 @@
 				var textureCube = new THREE.CubeTextureLoader().load( urls );
 				textureCube.mapping = THREE.CubeRefractionMapping;
 
+				//scene.background = textureCube;
+
 
 				var cubeMaterial1 = new THREE.MeshPhongMaterial( { color: 0xb2cbdf, envMap: textureCube, refractionRatio: 0.98, depthWrite: true, depthTest: true, clippingPlanes: [ localPlane ],
     				clipShadows: true} );
@@ -221,8 +215,11 @@
 
 				date = new Date();
 				pn = new Perlin('rnd' + date.getTime());
-				sphereGeom = new THREE.SphereGeometry(0.001, 20, 20);
+				//sphereGeom = new THREE.SphereGeometry(0.001, 20, 20);
+				sphereGeom = new THREE.CylinderGeometry( 0.025, 0.025, 0.125, 64, 1);
+
 				// save points for later calculation
+				
 				 for (var i = 0; i < sphereGeom.vertices.length; i += 1) {
 				    var vertex = sphereGeom.vertices[i];
 				    var vec = new THREE.Vector3(vertex.x, vertex.y, vertex.z);
@@ -232,6 +229,7 @@
 				    var norm = new THREE.Vector3(vertex.x / mag, vertex.y / mag, vertex.z / mag);
 				    sphereVerticesNormArray.push(norm);
 				 }
+				 
 
 				sphere = THREE.SceneUtils.createMultiMaterialObject(sphereGeom, [cubeMaterial1, wireFrameMat]);
   				scene.add(sphere);
@@ -245,6 +243,29 @@
   				mouseMesh = new THREE.Mesh(mouseGeometry, cubeMaterial1);
   				mouseMesh.position.set(3, 2, -2);
   				scene.add(mouseMesh);
+
+
+  				// model
+				var loader = new THREE.GLTFLoader().setPath( 'models/' );
+				loader.load( 'cross.glb', function ( gltf ) {
+					gltf.scene.traverse( function ( child ) {
+						if ( child.isMesh ) {
+							child.material = cubeMaterial1;
+							child.scale.set(0.001, 0.001, 0.001);
+						}
+					} );
+
+					scene.add( gltf.scene );
+					gltfModel = gltf.scene;
+					gltfModel.position.set(-2,-2,-3);
+					console.log("model loaded");
+				}, undefined, function ( e ) {
+					console.error( e );
+				} );
+
+
+
+
 	
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 				//document.addEventListener( 'mousemove', moveCursor, false );
@@ -347,20 +368,26 @@
 
 				box1.rotation.y = timer;
 				box1.rotation.z = timer;
-				/*
-				camera.position.x += ( mouseX - camera.position.x ) * .05;+44
-				camera.position.y += ( - mouseY - camera.position.y ) * .05;
-				*/
-				camera.lookAt( scene.position );
-				pointLight.position.x = 1500 * Math.cos( timer );
-				pointLight.position.z = 1500 * Math.sin( timer );
 
+				if(gltfModel!=null){
+					gltfModel.rotation.y = -timer;
+					gltfModel.rotation.z = -timer;
+					gltfModel.position.set(-2,Math.cos(timer) * - 2,Math.sin(timer) * -3);
+				}
+				
+
+				camera.lookAt( scene.position );
+
+				sphere.rotation.x = timer * 0.5;
+				sphere.rotation.y = timer * 0.5;
+				sphere.rotation.z = -timer * 0.5;
 				sphere.position.set(
-					Math.cos(timer) * orbitRadius,
-					0,
-					Math.sin(timer) * orbitRadius
+					Math.cos(timer * 0.5) * orbitRadius,
+					-0.25,
+					Math.sin(timer * 0.5) * orbitRadius
 
 				);
+				sphere.scale.set(0.5,0.5,0.5);
 
 				renderer.render( scene, camera );
 			}
