@@ -1,10 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js webgl - materials - cube refraction [Lucy]</title>
+		<title>oliver ellmers information graphics</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
+
+			* {
+			  cursor:none;
+			}
+
+			*:hover{
+			  cursor:none;
+			}
+
+			.cursor {
+  
+			  position: absolute;
+			  width: 24px;
+			  height: 24px;
+			  top: -50%;
+			  left: -50%;
+			  margin: -15px 0 0 -15px;
+			  border-radius: 50%;
+			  background-color: white;
+			  backface-visibility: hidden;
+			  mix-blend-mode: difference;
+			  z-index: 100000;
+			  pointer-events: none;
+			  
+			}
+
+			.cursor.is-moving {
+			}
+
+			.content_cursor {
+			  position:relative;
+			  height:100%;
+			}
+
 			body {
 				background:#FFFFFF;
 				background-color: transparent;
@@ -33,6 +67,8 @@
 		</style>
 	</head>
 
+
+
 	<body>
 
 
@@ -44,6 +80,8 @@
 		<script src="js/libs/stats.min.js"></script>
 		<script src="js/utils/SceneUtils.js"></script>
 		<script src="js/perlin.js"></script>
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 		
 		
@@ -58,7 +96,7 @@
 		-->
 	
 
-
+		<div class="cursor" id="cursor1"></div>
 		<script id="jsbin-javascript">
 			//canvas setup
 
@@ -195,11 +233,12 @@
   				box1 = new THREE.Mesh(boxGeometry1, cubeMaterial1);
   				box1.position.set(3, 2, -2);
   				scene.add(box1);
-
-  		
-				
+	
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				document.addEventListener( 'mousemove', moveCursor, false );
 				window.addEventListener( 'resize', onWindowResize, false );
+				document.addEventListener('mouseenter', onDocumentMouseEnter, false);
+				document.addEventListener('mouseleave', onDocumentMouseLeave, false);
 			}
 			function onWindowResize() {
 				windowHalfX = window.innerWidth / 2;
@@ -220,6 +259,30 @@
 				mouseX = ( event.clientX - windowHalfX ) * 4;
 				mouseY = ( event.clientY - windowHalfY ) * 4;
 				mousePos = new THREE.Vector3( mouseX, mouseY, -1 ).unproject( camera );
+			}
+
+			var $cursor = $('.cursor');
+			function moveCursor(e) {
+			  $cursor.addClass('is-moving');
+			  $cursor.css({"top": e.pageY, "left": e.pageX});
+
+			  clearTimeout(timer2);
+
+			   var timer2 = setTimeout(function() {
+			       $cursor.removeClass('is-moving');
+			   }, 300);
+			}
+
+			function onDocumentMouseEnter(event){
+				//console.log("the mouse has entered the iframe");
+				document.getElementById("cursor1").style.backgroundColor = "white";
+
+			}
+
+			function onDocumentMouseLeave(event){
+				//console.log("the mouse has left the building");
+				document.getElementById("cursor1").style.backgroundColor = "transparent";
+
 			}
 			//
 			function animate() {
