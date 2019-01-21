@@ -117,22 +117,8 @@
 				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 100000 );
 				camera.position.z = - 10;
 	
-				var r = "textures/cube/td/";
-
-				var urls = [
-					r + "px_final.jpg", r + "nx_final.jpg",
-					r + "py_final.jpg", r + "ny_final.jpg",
-					r + "pz_final.jpg", r + "nz_final.jpg"
-				];
-				
-				
-				
 				
 
-				
-				var textureCube = new THREE.CubeTextureLoader().load( urls );
-
-				textureCube.mapping = THREE.CubeRefractionMapping;
 				scene = new THREE.Scene();
 				//scene.background = textureCube;
 
@@ -142,6 +128,7 @@
 				pointLight = new THREE.PointLight( 0xffffff, 2 );
 				scene.add( pointLight );
 
+				//RENDERER
 				renderer = new THREE.WebGLRenderer({ alpha: true, preserveDrawingBuffer: true });
 				renderer.setClearColor( 0x000000, 0 );
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -154,6 +141,23 @@
 				renderer.localClippingEnabled = true;
 
 				// material samples
+				canvasTextureB = new THREE.Texture(canvas);
+
+				var r = "textures/cube/td/";
+
+				
+				var urls = [
+					r + "px_final.jpg", r + "nx_final.jpg",
+					r + "py_final.jpg", r + "ny_final.jpg",
+					r + "pz_final.jpg", r + "nz_final.jpg"
+				];
+
+				
+				
+				var textureCube = new THREE.CubeTextureLoader().load( urls );
+				textureCube.mapping = THREE.CubeRefractionMapping;
+
+
 				var cubeMaterial1 = new THREE.MeshPhongMaterial( { color: 0xb2cbdf, envMap: textureCube, refractionRatio: 0.98, depthWrite: true, depthTest: true, clippingPlanes: [ localPlane ],
     				clipShadows: true} );
 
@@ -172,7 +176,7 @@
 
 				date = new Date();
 				pn = new Perlin('rnd' + date.getTime());
-				sphereGeom = new THREE.SphereGeometry(0.001, 50, 50);
+				sphereGeom = new THREE.SphereGeometry(0.001, 20, 20);
 				// save points for later calculation
 				 for (var i = 0; i < sphereGeom.vertices.length; i += 1) {
 				    var vertex = sphereGeom.vertices[i];
@@ -187,8 +191,8 @@
 				sphere = THREE.SceneUtils.createMultiMaterialObject(sphereGeom, [cubeMaterial1, wireFrameMat]);
   				scene.add(sphere);
 
-  				boxGeometry1 = new THREE.BoxGeometry( 4, 0.1, 2);
-  				box1 = new THREE.Mesh(boxGeometry1, testMaterial);
+  				boxGeometry1 = new THREE.BoxGeometry( 2, 0.05,1 );
+  				box1 = new THREE.Mesh(boxGeometry1, cubeMaterial1);
   				box1.position.set(3, 2, -2);
   				scene.add(box1);
 
